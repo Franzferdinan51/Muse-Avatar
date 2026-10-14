@@ -51,3 +51,19 @@ Art from the Hermes / Nous Research ecosystem, archived here by the
 owner for personal avatar use. Converted to a 192x192 full-colour
 sprite (transparent margin trimmed, premultiplied Lanczos downscale,
 no halo fringe) by Juno with `tools/make_hermes_knight.py`.
+
+## juno-studio.png
+
+"Juno, studio" - the rendered Juno (black duck, suit, sunglasses)
+from Duckets' own MuseCompanionApp on his Mac:
+
+- Source: `MuseCompanionApp/app/assets/avatar/juno_idle.mp4`
+  (720x720, 24fps) - frame at t=8.5s, head turned three-quarter,
+  bill in profile. The same art the watch's GIF face is built from.
+
+Companion-app art from the owner's own project, archived here by
+the owner for personal avatar use. Converted to a 192x192
+full-colour sprite (studio backdrop flood-keyed to transparency,
+enclosed between-legs backdrop dropped, fringe decontaminated,
+premultiplied Lanczos downscale) by Juno with
+`tools/make_juno_studio.py`.

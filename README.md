@@ -78,9 +78,12 @@ renderer picks them from the same pose struct Jollybot uses.
   MuseCompanionApp's brand assets, 192x192 (see credits).
 - `collection/hermes-knight.png` - the chibi Hermes knight mascot
   from the Hermes desktop app assets, 192x192 (see credits).
+- `collection/juno-studio.png` - the rendered Juno from
+  MuseCompanionApp's avatar idle clip, 192x192 (see credits).
 - Generators live in `tools/` (`make_hermes_ink.py`,
   `make_juno_hires.py`, `make_juno_bubble.py`,
-  `make_hermes_knight.py`) next to the Juno
+  `make_hermes_knight.py`,
+  `make_juno_studio.py`) next to the Juno
   sprite tools.
 
 The hourly design cron grows this shelf (owner's own sources and

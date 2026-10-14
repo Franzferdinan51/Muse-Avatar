@@ -183,6 +183,14 @@ static void stamp(const char *const *rows, int yoff)
 
 static float s_next_blink = 2.2f;
 static float s_blink_start = -10.0f;
+/* Gaze dwell: 0 = centre, -1 = looking left, +1 = looking right.
+ * Centre is the resting state and dwells long; a glance aside is
+ * brief. Both dwells are randomised (same frand style as the blink
+ * scheduler and Jollybot's gaze timer) so idle never ticks like a
+ * metronome - the old fixed 2.6 s phase cycle gave every direction
+ * the same 2.6 s and repeated exactly every 10.4 s. */
+static int s_gaze = 0;
+static float s_next_gaze = 3.0f;
 
 void juno_pixel_render(const muse_pose_t *pose)
 {
@@ -195,6 +203,18 @@ void juno_pixel_render(const muse_pose_t *pose)
         s_next_blink = pose->t + 2.4f + frand() * 2.6f;
     }
     bool blink = (pose->t - s_blink_start) < 0.13f;
+
+    if (pose->t >= s_next_gaze) {
+        if (s_gaze != 0) {
+            /* Glance over: back to centre for a long dwell. */
+            s_gaze = 0;
+            s_next_gaze = pose->t + 2.8f + frand() * 2.4f;
+        } else {
+            /* Centre dwell over: a brief glance to a random side. */
+            s_gaze = frand() < 0.5f ? -1 : 1;
+            s_next_gaze = pose->t + 0.9f + frand() * 0.7f;
+        }
+    }
 
     draw_aura(pose);
     draw_shadow();
@@ -222,10 +242,9 @@ void juno_pixel_render(const muse_pose_t *pose)
     } else if (pose->happy > 0.15f) {
         map = JUNO_HAPPY;
     } else if (pose->mode == MUSE_MODE_IDLE) {
-        /* Look-around: the gaze wanders on a slow cycle. */
-        int phase = ((int)(pose->t / 2.6f)) % 4;
-        if (phase == 1) map = JUNO_LOOKL;
-        else if (phase == 3) map = JUNO_LOOKR;
+        /* Look-around: follow the gaze dwell scheduler above. */
+        if (s_gaze < 0) map = JUNO_LOOKL;
+        else if (s_gaze > 0) map = JUNO_LOOKR;
     }
     /* Breath: a slow 1 px bob, down on the exhale. */
     int bob = (sinf(pose->t * 1.8f) > 0.55f) ? 1 : 0;

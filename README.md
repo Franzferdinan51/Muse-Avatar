@@ -64,6 +64,9 @@ wired to MUSE_MODE_BOOT with Jollybot's beats (rise-in over
 0.6 s, lids shut until 0.9 s, aura fading in over 1.4 s; the
 boot sprite is the shut-lid Juno ringed by wake-sparks). The
 renderer picks them from the same pose struct Jollybot uses.
+Idle gaze runs on a dwell scheduler, not a fixed cycle: centre
+dwells 2.8-5.2 s, then a brief 0.9-1.6 s glance to a random side
+(host-verified dwell bands over a 60 s render run).
 
 ## Collection (started 2026-10-14)
 

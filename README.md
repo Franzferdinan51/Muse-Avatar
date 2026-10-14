@@ -73,8 +73,11 @@ picks them from the same pose struct Jollybot uses.
 - `collection/juno-hires.png` - Juno's own hi-res portrait, 128x128.
 - `collection/juno-bubble.png` - the glossy Juno bubble logo from
   MuseCompanionApp's brand assets, 192x192 (see credits).
+- `collection/hermes-knight.png` - the chibi Hermes knight mascot
+  from the Hermes desktop app assets, 192x192 (see credits).
 - Generators live in `tools/` (`make_hermes_ink.py`,
-  `make_juno_hires.py`, `make_juno_bubble.py`) next to the Juno
+  `make_juno_hires.py`, `make_juno_bubble.py`,
+  `make_hermes_knight.py`) next to the Juno
   sprite tools.
 
 The hourly design cron grows this shelf (owner's own sources and

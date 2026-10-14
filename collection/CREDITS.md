@@ -37,3 +37,17 @@ here by the owner for personal avatar use. Converted to a 192x192
 full-colour sprite (circle-cropped to the bubble, smooth
 anti-aliased rim, transparent background) by Juno with
 `tools/make_juno_bubble.py`.
+
+## hermes-knight.png
+
+"Hermes, knight" - the chibi Hermes knight mascot (winged helmet,
+blue-and-gold armour, caduceus staff) from the Hermes desktop app
+assets in Duckets' local project tree on his Mac:
+
+- Source: `Projects/Grok-Build-Desktop-App-work/upstream/hermes/apps/desktop/public/hermes.png`
+  (1254x1254, transparent background)
+
+Art from the Hermes / Nous Research ecosystem, archived here by the
+owner for personal avatar use. Converted to a 192x192 full-colour
+sprite (transparent margin trimmed, premultiplied Lanczos downscale,
+no halo fringe) by Juno with `tools/make_hermes_knight.py`.

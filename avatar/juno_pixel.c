@@ -136,17 +136,24 @@ static void draw_shadow(void)
     }
 }
 
+static float clampf01(float v)
+{
+    return v < 0.0f ? 0.0f : v > 1.0f ? 1.0f : v;
+}
+
 static void draw_aura(const muse_pose_t *p)
 {
     uint32_t acc = juno_pixel_accent(p->mode);
     s_pal[P_AURA] = to565(acc);
     float pulse = 0.85f + 0.15f * sinf(p->t * 1.7f);
+    /* Boot: the aura fades in over 1.4 s, like Jollybot's. */
+    float bootf = p->mode == MUSE_MODE_BOOT ? clampf01(p->mode_t / 1.4f) : 1.0f;
     for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
             float d = ((x - 32.0f) / 25.0f) * ((x - 32.0f) / 25.0f)
                     + ((y - 30.0f) / 27.0f) * ((y - 30.0f) / 27.0f);
             if (d < 1.0f && s_mask[y * W + x] == 0) {
-                float a = (1.0f - d) * 90.0f * pulse;
+                float a = (1.0f - d) * 90.0f * pulse * bootf;
                 s_fb[y * W + x] = P_AURA;
                 s_mask[y * W + x] = (uint8_t)a;
             }
@@ -193,8 +200,13 @@ void juno_pixel_render(const muse_pose_t *pose)
     draw_shadow();
 
     const char *const *map = JUNO_IDLE;
+    bool boot = pose->mode == MUSE_MODE_BOOT;
     if (pose->mode == MUSE_MODE_OFF) {
         map = JUNO_SLEEP;
+    } else if (boot) {
+        /* Waking: lids stay shut until 0.9 s, then open (Jollybot's
+         * boot beats) - boot overrides blink/happy while it lasts. */
+        map = pose->mode_t < 0.9f ? JUNO_BOOT : JUNO_IDLE;
     } else if (blink) {
         map = JUNO_BLINK;
     } else if (pose->mode == MUSE_MODE_ERROR) {
@@ -217,6 +229,13 @@ void juno_pixel_render(const muse_pose_t *pose)
     }
     /* Breath: a slow 1 px bob, down on the exhale. */
     int bob = (sinf(pose->t * 1.8f) > 0.55f) ? 1 : 0;
+    if (boot) {
+        /* Pop-in: start sunk 5 px and rise to rest over 0.6 s (the
+         * sprite-space analog of Jollybot's boot squash), then the
+         * normal breath bob takes over. */
+        float pop = clampf01(pose->mode_t / 0.6f);
+        bob = pop < 1.0f ? (int)((1.0f - pop) * 5.0f + 0.5f) : bob;
+    }
     stamp(map, bob);
 }
 

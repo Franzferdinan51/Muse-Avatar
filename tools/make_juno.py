@@ -288,6 +288,20 @@ frames["error"] = decor([r[:] for r in _idle], [
     (55, 16, "R"), (56, 16, "R"), (55, 17, "R"), (56, 17, "R"),
     (55, 18, "R"), (56, 18, "R"), (55, 20, "R"), (56, 20, "R"),
 ])
+# boot: lids still shut (she is waking, not sleeping - no Zzz) with
+# accent wake-sparks around the head. The renderer owns the timing
+# (rise-in over 0.6s, lids open at 0.9s - same beats as Jollybot's
+# MUSE_MODE_BOOT in muse_pixel.c); this frame is the shut-eye half.
+def _spark(g, cx, cy):
+    for dx, dy in ((0, -2), (0, -1), (0, 0), (0, 1), (0, 2),
+                   (-1, 0), (1, 0)):
+        px(g, cx + dx, cy + dy, "A")
+
+_b = [r[:] for r in _blink]
+_spark(_b, 8, 14)
+_spark(_b, 57, 9)
+_spark(_b, 60, 23)
+frames["boot"] = _b
 # sleep: lids down + Zzz drifting up
 _s = [r[:] for r in _blink]
 for cx, cy, s in ((49, 12, 5), (56, 4, 4)):
@@ -299,7 +313,7 @@ for cx, cy, s in ((49, 12, 5), (56, 4, 4)):
 frames["sleep"] = _s
 
 ORDER = ["idle", "blink", "lookl", "lookr", "listen", "think",
-         "talk", "happy", "wave", "error", "sleep"]
+         "talk", "happy", "wave", "error", "sleep", "boot"]
 
 # contact sheet, two rows
 cols = 6
@@ -328,7 +342,7 @@ seq[0].save("/home/hatch/workspace/juno-design/juno_idle.gif", save_all=True,
             append_images=seq[1:], duration=110, loop=0)
 
 # animation revue: every pose in sequence
-revue_names = ["idle", "idle", "blink", "lookl", "lookr", "listen",
+revue_names = ["boot", "boot", "idle", "idle", "blink", "lookl", "lookr", "listen",
                "think", "talk", "talk", "happy", "wave", "wave",
                "error", "sleep", "sleep"]
 revue = [render(frames[n], 5, bg=(10, 18, 38)).convert("RGB") for n in revue_names]

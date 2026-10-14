@@ -55,12 +55,15 @@ Watch integration (a third face in the muse-gadget-206 avatar
 picker, next to the Juno GIF and the pixel Muse) is future work.
 
 Design v2 (owner feedback, same night): the head is in 3/4 profile -
-front-on, the bill stared the viewer down and read weird. Eleven
+front-on, the bill stared the viewer down and read weird. Twelve
 poses now, mirroring Jollybot's animation range: idle, blink,
 look-left, look-right (idle gaze wander), listen (sound arcs),
 think (thought dots), talk, happy, wave (raised wing + hearts,
-the pet reaction), error (alert mark), sleep (Zzz). The renderer
-picks them from the same pose struct Jollybot uses.
+the pet reaction), error (alert mark), sleep (Zzz), and boot -
+wired to MUSE_MODE_BOOT with Jollybot's beats (rise-in over
+0.6 s, lids shut until 0.9 s, aura fading in over 1.4 s; the
+boot sprite is the shut-lid Juno ringed by wake-sparks). The
+renderer picks them from the same pose struct Jollybot uses.
 
 ## Collection (started 2026-10-14)
 

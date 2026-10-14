@@ -15,16 +15,16 @@ PAL = {
     "K": (0x14, 0x10, 0x0E),   # outline
     "B": (0x17, 0x18, 0x1C),   # black fur
     "b": (0x23, 0x24, 0x2A),   # fur shade
-    "H": (0x2C, 0x2D, 0x35),   # fur highlight (soft sheen, not a helmet)
-    "G": (0x05, 0x05, 0x07),   # glasses lens
-    "g": (0x46, 0x48, 0x52),   # glasses frame / shine edge
+    "H": (0x3A, 0x3C, 0x48),   # fur highlight (lifted 2026-10-14: sheen must read at 200px watch size)
+    "G": (0x1A, 0x24, 0x36),   # glasses lens (blue-slate: hue-separates from neutral fur at watch size)
+    "g": (0x58, 0x62, 0x72),   # glasses frame / shine edge (brightened so the lens rim reads at 200px)
     "W": (0xF5, 0xF2, 0xEA),   # white (shirt, glints)
     "Y": (0xF7, 0xB7, 0x31),   # bill / feet yellow
     "O": (0xE8, 0x89, 0x0C),   # bill orange shade
     "o": (0xB8, 0x5F, 0x00),   # bill line
-    "S": (0x1D, 0x1E, 0x24),   # suit
+    "S": (0x25, 0x2A, 0x36),   # suit (blue-grey lift: separates body from black fur wings at 200px)
     "s": (0x28, 0x29, 0x31),   # suit shade
-    "L": (0x3A, 0x3B, 0x45),   # lapel light
+    "L": (0x56, 0x5D, 0x6E),   # lapel light (brightened for watch size)
     "T": (0x0C, 0x0C, 0x10),   # tie
     "M": (0x5B, 0x2C, 0x14),   # mouth interior
     "A": (0xA7, 0x7D, 0xFF),   # accent FX (renderer tints per mode)
@@ -134,14 +134,30 @@ def draw_juno(talk=False, blink=False, happy=False, glint_shift=0, wing_up=False
         if g[15][x] == "G" or g[16][x] == "G":
             if g[15][x] == "G":
                 px(g, x, 15, "g")
+    # full lens rim (watch-size fix): any lens cell touching a non-lens
+    # cell becomes frame, so the glasses shape reads at 200px instead
+    # of melting into the fur. The blink lid fill below only replaces
+    # "G", so the rim survives a blink as a closed-glasses outline.
+    rim = [row[:] for row in g]
+    for y in range(12, 28):
+        for x in range(10, 56):
+            if g[y][x] != "G":
+                continue
+            for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                if g[ny][nx] != "G":
+                    rim[y][x] = "g"
+                    break
+    g = rim
     if not blink:
-        # glints: a diagonal slash on the near lens, one dot far side;
+        # glints: a 2px-wide diagonal slash on the near lens, a 2px
+        # dash on the far lens (1px glints vanish at watch size);
         # glint_shift slides them for the look-around poses
         s = glint_shift
         for dx, dy in ((0, 0), (1, 1), (2, 2)):
             px(g, 20 + s + dx, 17 + dy, "W")
-        px(g, 21 + s, 17, "W")
+            px(g, 21 + s + dx, 17 + dy, "W")
         px(g, 40 + s, 18, "W")
+        px(g, 41 + s, 18, "W")
     else:
         # blink: lids slide down over both lenses, seam at the bottom
         for y in range(16, 24):
@@ -149,9 +165,9 @@ def draw_juno(talk=False, blink=False, happy=False, glint_shift=0, wing_up=False
                 if g[y][x] == "G":
                     g[y][x] = "B"
         for x in range(16, 33):
-            px(g, x, 23, "K")
+            px(g, x, 23, "g")
         for x in range(37, 46):
-            px(g, x, 23, "K")
+            px(g, x, 23, "g")
     # bill - profile, pointing left. Front-on was the weird part
     # (owner); in profile the bill reads. Two stacked ellipses: the
     # base hides inside the face, the visible half rounds to the tip.
@@ -223,10 +239,13 @@ frames = {
     "talk": draw_juno(talk=True),
     "happy": draw_juno(happy=True),
 }
-# listening: sound arcs rolling in toward the bill tip
+# listening: sound arcs rolling in toward the bill tip. Each arc
+# point is a 2px dash - single pixels read as dust at 200px.
 frames["listen"] = decor([r[:] for r in _idle], [
-    (5, 25, "A"), (4, 28, "A"), (4, 31, "A"), (5, 34, "A"),
-    (2, 22, "A"), (1, 26, "A"), (1, 33, "A"), (2, 37, "A"),
+    (5, 25, "A"), (6, 25, "A"), (4, 28, "A"), (5, 28, "A"),
+    (4, 31, "A"), (5, 31, "A"), (5, 34, "A"), (6, 34, "A"),
+    (2, 22, "A"), (3, 22, "A"), (1, 26, "A"), (2, 26, "A"),
+    (1, 33, "A"), (2, 33, "A"), (2, 37, "A"), (3, 37, "A"),
 ])
 # thinking: thought dots climbing away from the head
 _t = [r[:] for r in _idle]

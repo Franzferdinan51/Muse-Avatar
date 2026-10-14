@@ -61,3 +61,19 @@ look-left, look-right (idle gaze wander), listen (sound arcs),
 think (thought dots), talk, happy, wave (raised wing + hearts,
 the pet reaction), error (alert mark), sleep (Zzz). The renderer
 picks them from the same pose struct Jollybot uses.
+
+## Collection (started 2026-10-14)
+
+`collection/` is the growing avatar shelf: high-pixel-count pieces
+(128+ grids - no blocky slop), each one credited in
+`collection/CREDITS.md`.
+
+- `collection/hermes-ink.png` + `hermes-ink-white.png` - the Hermes
+  ink girl from Duckets' Hermes projects, 192x192 (see credits).
+- `collection/juno-hires.png` - Juno's own hi-res portrait, 128x128.
+- Generators live in `tools/` (`make_hermes_ink.py`,
+  `make_juno_hires.py`) next to the Juno sprite tools.
+
+The hourly design cron grows this shelf (owner's own sources and
+open-license finds, always credited, always eyeball-verified) next
+to its Juno polish work.

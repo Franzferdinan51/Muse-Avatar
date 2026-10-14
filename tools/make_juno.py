@@ -101,7 +101,30 @@ def draw_juno(talk=False, blink=False, happy=False, glint_shift=0, wing_up=False
     # wings / arms at the sides, tucked in (right one raised = wave)
     ellipse(g, 16, 45, 3.8, 7.5, "B")
     if wing_up:
-        ellipse(g, 50.5, 30, 3.6, 7.0, "B")
+        # Raised wing, diagonal (silhouette-gap fix, 2026-10-14): the
+        # old axis-aligned ellipse at (50.5, 30) sat flush against the
+        # head and merged into it - at watch size it read as a black
+        # nub hanging off the cheek, not a waving wing. Now a thick
+        # diagonal segment runs shoulder (46, 42) -> (54, 30) and a
+        # rotated tip ellipse leans out at (56, 25); the head, drawn
+        # after the wings, cuts across the segment's top-left, which
+        # leaves a clean backdrop gap between wing and head while the
+        # base stays joined to the body at the shoulder.
+        steps = 26
+        for i in range(steps + 1):
+            t = i / steps
+            cx, cy = 46 + 8 * t, 42 - 12 * t
+            for yy in range(H):
+                for xx in range(W):
+                    if ((xx - cx) / 3.2) ** 2 + ((yy - cy) / 3.2) ** 2 <= 1.0:
+                        px(g, xx, yy, "B")
+        ca, sa = math.cos(-0.55), math.sin(-0.55)
+        for yy in range(H):
+            for xx in range(W):
+                dx, dy = xx - 56, yy - 25
+                u, v = ca * dx + sa * dy, -sa * dx + ca * dy
+                if (u / 3.8) ** 2 + (v / 7.5) ** 2 <= 1.0:
+                    px(g, xx, yy, "B")
     else:
         ellipse(g, 48, 45, 3.8, 7.5, "B")
     # head - sits low, chin tucked into the collar, shifted a touch
@@ -253,9 +276,10 @@ dot(_t, 52, 27, 2, "A")
 dot(_t, 55, 20, 2, "A")
 dot(_t, 58, 12, 3, "A")
 frames["think"] = _t
-# wave: raised wing + hearts (the pet reaction)
+# wave: raised wing + hearts (the pet reaction). Hearts sit above
+# the raised wing tip (56, 25): the old (57, 14) spot now crowds it.
 _w = draw_juno(happy=True, wing_up=True)
-heart(_w, 57, 14)
+heart(_w, 58, 10)
 heart(_w, 52, 7)
 frames["wave"] = _w
 # error: alert mark

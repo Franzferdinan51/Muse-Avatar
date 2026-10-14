@@ -71,8 +71,11 @@ picks them from the same pose struct Jollybot uses.
 - `collection/hermes-ink.png` + `hermes-ink-white.png` - the Hermes
   ink girl from Duckets' Hermes projects, 192x192 (see credits).
 - `collection/juno-hires.png` - Juno's own hi-res portrait, 128x128.
+- `collection/juno-bubble.png` - the glossy Juno bubble logo from
+  MuseCompanionApp's brand assets, 192x192 (see credits).
 - Generators live in `tools/` (`make_hermes_ink.py`,
-  `make_juno_hires.py`) next to the Juno sprite tools.
+  `make_juno_hires.py`, `make_juno_bubble.py`) next to the Juno
+  sprite tools.
 
 The hourly design cron grows this shelf (owner's own sources and
 open-license finds, always credited, always eyeball-verified) next

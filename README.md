@@ -53,3 +53,11 @@ the backdrop, no box - same canon as Jollybot), sunglasses glints
 double as the eyes, the yellow bill carries the expressions.
 Watch integration (a third face in the muse-gadget-206 avatar
 picker, next to the Juno GIF and the pixel Muse) is future work.
+
+Design v2 (owner feedback, same night): the head is in 3/4 profile -
+front-on, the bill stared the viewer down and read weird. Eleven
+poses now, mirroring Jollybot's animation range: idle, blink,
+look-left, look-right (idle gaze wander), listen (sound arcs),
+think (thought dots), talk, happy, wave (raised wing + hearts,
+the pet reaction), error (alert mark), sleep (Zzz). The renderer
+picks them from the same pose struct Jollybot uses.

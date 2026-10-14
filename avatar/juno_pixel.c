@@ -26,7 +26,7 @@ enum {
     P_BG = 0,
     P_OUT, P_FUR, P_FURSH, P_FURHI, P_LENS, P_FRAME, P_WHITE,
     P_BILL, P_BILLSH, P_BILLLN, P_SUIT, P_SUITS, P_LAPEL, P_TIE,
-    P_MOUTH, P_SHADOW, P_AURA, P_COUNT,
+    P_MOUTH, P_SHADOW, P_AURA, P_HEART, P_COUNT,
 };
 
 static uint16_t s_pal[P_COUNT];
@@ -57,6 +57,7 @@ static void pal_init(void)
     s_pal[P_TIE]    = to565(0x0c0c10);
     s_pal[P_MOUTH]  = to565(0x5b2c14);
     s_pal[P_SHADOW] = to565(0x16101f);
+    s_pal[P_HEART]  = to565(0xff4f8b);
     s_pal_init = true;
 }
 
@@ -78,6 +79,8 @@ static int pal_of(char c)
     case 'L': return P_LAPEL;
     case 'T': return P_TIE;
     case 'M': return P_MOUTH;
+    case 'A': return P_AURA;
+    case 'R': return P_HEART;
     default:  return P_BG;
     }
 }
@@ -190,12 +193,27 @@ void juno_pixel_render(const muse_pose_t *pose)
     draw_shadow();
 
     const char *const *map = JUNO_IDLE;
-    if (blink) {
+    if (pose->mode == MUSE_MODE_OFF) {
+        map = JUNO_SLEEP;
+    } else if (blink) {
         map = JUNO_BLINK;
+    } else if (pose->mode == MUSE_MODE_ERROR) {
+        map = JUNO_ERROR;
+    } else if (pose->mode == MUSE_MODE_LISTENING) {
+        map = JUNO_LISTEN;
+    } else if (pose->mode == MUSE_MODE_THINKING) {
+        map = JUNO_THINK;
     } else if (pose->mode == MUSE_MODE_SPEAKING && pose->level > 0.05f) {
         map = JUNO_TALK;
     } else if (pose->happy > 0.4f) {
+        map = JUNO_WAVE;
+    } else if (pose->happy > 0.15f) {
         map = JUNO_HAPPY;
+    } else if (pose->mode == MUSE_MODE_IDLE) {
+        /* Look-around: the gaze wanders on a slow cycle. */
+        int phase = ((int)(pose->t / 2.6f)) % 4;
+        if (phase == 1) map = JUNO_LOOKL;
+        else if (phase == 3) map = JUNO_LOOKR;
     }
     /* Breath: a slow 1 px bob, down on the exhale. */
     int bob = (sinf(pose->t * 1.8f) > 0.55f) ? 1 : 0;
